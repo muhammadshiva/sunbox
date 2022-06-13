@@ -1,19 +1,24 @@
-import { Flex, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, useColorModeValue } from "@chakra-ui/react"
 
 const NavBarContainer = ({ children, ...extraStyles }: any) => {
     return (
-        <Flex
-            as="nav"
-            align="center"
-            justify="space-between"
-            wrap="wrap"
-            w="100%"
-            mb={8}
-            p={8}
+        <Box
             bg={useColorModeValue('white', 'gray.900')}
-            {...extraStyles}>
-            {children}
-        </Flex>
+        >
+            <Flex
+                as="nav"
+                align="center"
+                justify="space-between"
+                wrap="wrap"
+                maxW={'6xl'}
+                m="auto"
+                w="100%"
+                mb={8}
+                p={8}
+                {...extraStyles}>
+                {children}
+            </Flex>
+        </Box>
     )
 }
 

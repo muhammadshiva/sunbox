@@ -1,5 +1,5 @@
-import HomePage from "./pages/Home"
+import LoggedInPage from './LoggedInPage'
 
 export {
-    HomePage
+    LoggedInPage
 }
