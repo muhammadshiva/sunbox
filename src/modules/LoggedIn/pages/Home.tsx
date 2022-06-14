@@ -38,16 +38,6 @@ const Home = () => {
           <img src="./img/hero-img.png" alt="sunbox" />
         </Box>
       </Flex>
-      <Flex mt={20} mb={5} justifyContent="space-between">
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-1.png" alt="sunbox" />
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-2.png" alt="sunbox" />
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-3.png" alt="sunbox" />
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-4.png" alt="sunbox" />
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-5.png" alt="sunbox" />
-        <img width={100} style={{ objectFit: 'contain' }} src="./img/clients/client-6.png" alt="sunbox" />
-
-      </Flex>
-      <Divider mb={20} />
       <Box>
         <Center>
           <Heading as='h3' size='lg' >Tentang Kami</Heading>
@@ -119,6 +109,18 @@ const Home = () => {
           <img src="./img/why-us.png" alt="sunbox" style={{maxWidth: 400}} />
         </Box>
       </Flex>
+
+      <Heading as='h2' size='xl'>Layanan Kami</Heading>
+      <Flex wrap="wrap" mt={20} mb={5} justifyContent='space-around'>
+        <img width={100} src="./img/feature/busines.png" alt="sunbox" />
+        <img width={100} src="./img/feature/data.png" alt="sunbox" />
+        <img width={100} src="./img/feature/digitalmarketing.png" alt="sunbox" />
+        <img width={100} src="./img/feature/graphic.png" alt="sunbox" />
+        <img width={100} src="./img/feature/lifestyle.png" alt="sunbox" />
+        <img width={100} src="./img/feature/music.png" alt="sunbox" />
+
+      </Flex>
+      <Divider mb={20} />
     </Box>
   )
 }

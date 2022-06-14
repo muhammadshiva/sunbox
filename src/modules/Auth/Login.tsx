@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import {
     Box,
     Flex,
@@ -14,6 +15,8 @@ import {
     IconProps,
     Icon,
 } from '@chakra-ui/react';
+import { loginUser } from '../../actions/auth';
+import { connect } from 'react-redux';
 
 const avatars = [
     {
@@ -34,7 +37,29 @@ const avatars = [
     },
 ];
 
-export default function Login() {
+function Login(props: any) {
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const { loginError } = props
+
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value)
+    }
+
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value)
+    }
+
+    const handleLogin = () => {
+        const { dispatch } = props;
+        if (password.length < 6) {
+            alert('Sorry, minimum passsword 6 character')
+        } else {
+            dispatch(loginUser(email, password))
+        }
+        setEmail("")
+        setPassword("")
+    }
     return (
         <Box position={'relative'}>
             <Container
@@ -130,6 +155,8 @@ export default function Login() {
                     <Box as={'form'} mt={10}>
                         <Stack spacing={4}>
                             <Input
+                                value={email}
+                                onChange={(e) => handleEmailChange(e)}
                                 placeholder="email"
                                 bg={'gray.100'}
                                 border={0}
@@ -139,6 +166,8 @@ export default function Login() {
                                 }}
                             />
                             <Input
+                                value={password}
+                                onChange={(e) => handlePasswordChange(e)}
                                 placeholder="password"
                                 bg={'gray.100'}
                                 border={0}
@@ -149,7 +178,12 @@ export default function Login() {
                                 type="password"
                             />
                         </Stack>
+                        {loginError && (
+                            <Text color='red.400' mt={2} mb={2}>Incorrect email or password.</Text>
+                        )}
+
                         <Button
+                            onClick={handleLogin}
                             fontFamily={'heading'}
                             mt={8}
                             w={'full'}
@@ -195,3 +229,11 @@ export const Blur = (props: IconProps) => {
         </Icon>
     );
 };
+
+function mapStateToProps(state: any) {
+    return {
+        loginError: state.auth.registerError
+    }
+}
+
+export default connect(mapStateToProps)(Login)
