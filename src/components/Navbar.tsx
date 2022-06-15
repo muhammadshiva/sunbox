@@ -49,7 +49,7 @@ const NavBar = (props: any) => {
                         />
                         <MenuList>
                             <Link to="/"><MenuItem>Home</MenuItem></Link>
-                            <Link to="/about"><MenuItem>Create Project</MenuItem></Link>
+                            <Link to="/create-project"><MenuItem>Create Project</MenuItem></Link>
                             <MenuItem onClick={handleAlert}>Logout</MenuItem>
                         </MenuList>
                     </Menu>
