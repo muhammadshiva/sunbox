@@ -12,6 +12,8 @@ import {
     ref,
     set,
 } from 'firebase/database'
+import { Navigate } from 'react-router-dom';
+
 export const LOGIN_REQUEST = "LOGIN_REQUEST"
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
@@ -107,6 +109,7 @@ export const loginUser = (email, password) => (dispatch) => {
         .then(user => {
             dispatch(receiveLogin(user));
             alert('Welcome freelancer ' + user.user.email)
+            return <Navigate to="/" replace={true} />
         })
         .catch(() => {
             //Do something with the error if you want!
@@ -127,6 +130,7 @@ export const registerUser = (username, email, password) => (dispatch) => {
                 role: 'member'
             })    
             alert('Your account has been created successfully')
+            return <Navigate to="/" replace={true} />
         })
         .catch(() => {
             //Do something with the error if you want!

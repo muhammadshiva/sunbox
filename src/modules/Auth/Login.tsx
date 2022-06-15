@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { loginUser } from '../../actions/auth';
 import { connect } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const avatars = [
     {
@@ -40,8 +41,9 @@ const avatars = [
 function Login(props: any) {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const { loginError } = props
-
+    const { loginError, isAuthenticated } = props
+    let navigate = useNavigate()
+    console.log("is auth ", isAuthenticated)
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
     }
@@ -55,11 +57,12 @@ function Login(props: any) {
         if (password.length < 6) {
             alert('Sorry, minimum passsword 6 character')
         } else {
-            dispatch(loginUser(email, password))
+            dispatch(loginUser(email, password))   
         }
         setEmail("")
         setPassword("")
     }
+    
     return (
         <Box position={'relative'}>
             <Container
@@ -232,7 +235,8 @@ export const Blur = (props: IconProps) => {
 
 function mapStateToProps(state: any) {
     return {
-        loginError: state.auth.registerError
+        loginError: state.auth.registerError,
+        isAuthenticated: state.auth.isAuthenticated
     }
 }
 
