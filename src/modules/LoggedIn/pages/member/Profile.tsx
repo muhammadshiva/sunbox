@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import {
@@ -13,92 +13,73 @@ import {
     Container,
 } from '@chakra-ui/react';
 import Layouts from '../../../../components/Layouts';
+// import { ref, onValue, getDatabase, query, get, child } from 'firebase/database'
+import { initializeApp } from 'firebase/app';
+import firebaseConfig from '../../../../firebase/config';
+import {
+    collection, query, orderBy, onSnapshot
+} from 'firebase/firestore'
+import { dbFirestore } from '../../../../firebase'
+import CardProject, { ICardProject } from '../../../../components/CardProject';
 
-interface IBlogTags {
-    tags: Array<string>;
-    marginTop?: SpaceProps['marginTop'];
+interface IProjects {
+    data: ICardProject[],
+    id: number
 }
-
-const BlogTags: React.FC<IBlogTags> = (props) => {
-    return (
-        <HStack spacing={2} marginTop={props.marginTop}>
-            {props.tags.map((tag) => {
-                return (
-                    <Tag size={'md'} variant="solid" colorScheme="orange" key={tag}>
-                        {tag}
-                    </Tag>
-                );
-            })}
-        </HStack>
-    );
-}
-
 const Profile = (props: any) => {
+    const [projects, setProjects] = useState<any []>([])
+    // const [data, setData] = useState({})
+    const myFirebase = initializeApp(firebaseConfig)
+    // const databaseInit = getDatabase(myFirebase)
+
+    const getAllProjects = () => {
+        //with realtime db
+        // const dbRef = ref(databaseInit);
+        // get(child(dbRef, 'projects')).then((snapshot) => {
+        // if (snapshot.exists()) {
+        //     let keyName = snapshot.key;
+        //     let data = snapshot.val()
+        //     console.log('key name ', keyName)
+        //     console.log('datanya cuy ', data.SW0ThquOIYbfJro5iMFIwq3LjQB2)
+        // } else {
+        //     console.log("No data available");
+        // }
+        // }).catch((error) => {
+        // console.error(error);
+        // });
+
+        // with firestore
+        const q = query(collection(dbFirestore, 'projects'), orderBy('created', 'desc'))
+        onSnapshot(q, (querySnapshot: any) => {
+            let dataProjects:any = []
+            querySnapshot.docs.map((doc: any) => {
+                dataProjects.push(
+                    {...doc.data(), id: doc.id}
+                )
+            })
+            setProjects(dataProjects)
+        })
+
+    }
+
+    useEffect(() => {
+        getAllProjects()
+    }, [])
     return (
         <Layouts>
             <Link to="/detail">
                 <Container maxW={'6xl'} mb={10}>
-                    <Box
-                        marginTop={{ base: '1', sm: '5' }}
-                        display="flex"
-                        flexDirection={{ base: 'column', sm: 'row' }}
-                        justifyContent="space-between"
-                        bg={useColorModeValue('gray.50', 'gray.900')}
-                        color={useColorModeValue('gray.700', 'gray.200')}
-                    >
-                        <Box
-                            display="flex"
-                            flex="1"
-                            marginRight="3"
-                            position="relative"
-                            alignItems="center">
-                            <Box
-                                width={{ base: '100%', sm: '85%' }}
-                                zIndex="2"
-                                marginLeft={{ base: '0', sm: '5%' }}
-                                marginTop="5%">
-                                <Image
-                                    borderRadius="lg"
-                                    src={
-                                        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
-                                    }
-                                    alt="some good alt text"
-                                    objectFit="contain"
-                                />
-                            </Box>
-                            <Box zIndex="1" width="100%" position="absolute" height="100%">
-                                <Box
-                                    bgGradient={useColorModeValue(
-                                        'radial(orange.600 1px, transparent 1px)',
-                                        'radial(orange.300 1px, transparent 1px)'
-                                    )}
-                                    backgroundSize="20px 20px"
-                                    opacity="0.4"
-                                    height="100%"
-                                />
-                            </Box>
-                        </Box>
-                        <Box
-                            display="flex"
-                            flex="1"
-                            flexDirection="column"
-                            justifyContent="center"
-                            marginTop={{ base: '3', sm: '0' }}>
-                            <BlogTags tags={['Engineering', 'Product']} />
-                            <Heading marginTop="1">
-                                Pembuatan Website Instansi Pemerintahan
-                            </Heading>
-                            <Text
-                                as="p"
-                                marginTop="2"
-                                color={useColorModeValue('gray.700', 'gray.200')}
-                                fontSize="lg">
-                                Pembuatan Website untuk Polres Singkawang (Polda Kalimantan Barat)
-                                termasuk seluruh biaya desain web, hosting, dan domain hingga website dapat diakses publik.
-                            </Text>
-                        </Box>
-                    </Box>
-
+                   {
+                    projects?.map((item, index) => (
+                        <div key={index}>
+                            <CardProject
+                                id={item.id}
+                                title={item.title}
+                                description={item.description}
+                            />
+                        </div>
+                    ))
+                   }
                 </Container>
             </Link>
         </Layouts>

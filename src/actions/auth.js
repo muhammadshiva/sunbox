@@ -37,9 +37,10 @@ const requestLogin = () => {
     }
 }
 
-const receiveLogin = () => {
+const receiveLogin = (user) => {
     return {
-        type: LOGIN_SUCCESS
+        type: LOGIN_SUCCESS,
+        user
     }
 }
 

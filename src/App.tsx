@@ -17,7 +17,7 @@ function App(props: any) {
         {isAuthenticated ?
           <>
           <Route path="/" element={<Profile />} />
-          <Route path="/detail" element={<DetailProduct />} />
+          <Route path="/product/:projectId" element={<DetailProduct />} />
           <Route path="/create-project" element={<Project />} />
           </> :
           <>

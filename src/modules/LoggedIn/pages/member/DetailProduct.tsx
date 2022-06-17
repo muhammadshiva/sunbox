@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react'
 import {
     Box,
     Container,
@@ -14,9 +15,36 @@ import {
     List,
     ListItem,
 } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
 import Layouts from '../../../../components/Layouts';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { dbFirestore } from '../../../../firebase';
 
 export default function DetailProduct() {
+    const [projects, setProjects] = useState<any []>([])
+    const [project, setProject] = useState([])
+    const { projectId } = useParams()
+    const getAllProjects = () => {
+        const q = query(collection(dbFirestore, 'projects'), orderBy('created', 'desc'))
+        onSnapshot(q, (querySnapshot: any) => {
+            let dataProjects:any = []
+            querySnapshot.docs.map((doc: any) => {
+                dataProjects.push(
+                    {...doc.data(), id: doc.id}
+                )
+            })
+            setProjects(dataProjects)
+        })    
+    }
+    useEffect(() => {
+        getAllProjects()
+    }, [])
+    
+    const detailProject = projects.find((el: any)=> el.id === projectId)
+    let nf = new Intl.NumberFormat('en-US');
+    let skillsData = detailProject?.skill
+    let skills = skillsData?.split(',')
+
     return (
         <Layouts>
             <Container maxW={'6xl'}>
@@ -43,13 +71,14 @@ export default function DetailProduct() {
                                 lineHeight={1.1}
                                 fontWeight={600}
                                 fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-                                Pembuatan Website Instansi Pemerintahan
+                                {detailProject?.title}
                             </Heading>
                             <Text
                                 color={useColorModeValue('gray.900', 'gray.400')}
                                 fontWeight={300}
-                                fontSize={'2xl'}>
-                                Rp. 5000.000,00
+                                fontSize={'2xl'}
+                                mt={4}>
+                                Rp. {nf.format(detailProject?.price)}
                             </Text>
                         </Box>
 
@@ -69,8 +98,7 @@ export default function DetailProduct() {
                                     Catatan: proyek ini bisa dilakukan dengan tim Anda namun untuk harga sudah sesuai dengan yang ada di atas.
                                 </Text>
                                 <Text fontSize={'lg'}>
-                                    Pembuatan Website untuk Polres Singkawang (Polda Kalimantan Barat)
-                                    termasuk seluruh biaya desain web, hosting, dan domain hingga website dapat diakses publik
+                                    {detailProject?.description}
                                 </Text>
                             </VStack>
                             <Box>
@@ -84,16 +112,16 @@ export default function DetailProduct() {
                                 </Text>
 
                                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-                                    <List spacing={2}>
-                                        <ListItem>NextJS</ListItem>
-                                        <ListItem>Typescript</ListItem>{' '}
-                                        <ListItem>ExpressJs</ListItem>
+                                    <List display="flex" alignItems='center' flexWrap='wrap' gap="10">
+                                       {skills?.map((item: string, index: number) => (
+                                        <>
+                                         <ListItem key={index}>{item}</ListItem>
+                                         </>
+                                       ))}
                                     </List>
-                                    <List spacing={2}>
-                                        <ListItem>Mysql</ListItem>
-                                        <ListItem>Redux</ListItem>
-                                        <ListItem>Tailwind CSS</ListItem>
-                                    </List>
+                                    {/* <List spacing={2}>
+                                     
+                                    </List> */}
                                 </SimpleGrid>
                             </Box>
                         </Stack>

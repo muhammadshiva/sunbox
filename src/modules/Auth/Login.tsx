@@ -58,6 +58,7 @@ function Login(props: any) {
             alert('Sorry, minimum passsword 6 character')
         } else {
             dispatch(loginUser(email, password))   
+            navigate('/')
         }
         setEmail("")
         setPassword("")
